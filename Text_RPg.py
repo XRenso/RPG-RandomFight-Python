@@ -45,8 +45,8 @@ class Enemy(object):
 
     def get_damage(self, damage):
         self.hp -= damage
-        
-        return   f"Вы нанесли урон {self.name} в размере {damage} едениц урона. \nУ {self.name} осталось {self.hp} хп"
+
+        return f"Вы нанесли урон {self.name} в размере {damage} едениц урона. \nУ {self.name} осталось {self.hp} хп"
     # def endDIE(self, heroName):
     #     print(f"Вы победили {self.name} из {self.country}. Мои поздравления {heroName}")
 
@@ -61,7 +61,7 @@ class Enemy(object):
         return attack
 
     def health(self):
-        chance = random.randrange(1,self.maxAttack + self.hp)
+        chance = random.randrange(1, self.maxAttack + self.hp)
         triplet = self.maxAttack + self.hp
         if chance == triplet:
             if self.hp > self.age:
@@ -89,6 +89,7 @@ class Enemy(object):
 
 class Player(object):
     global last_action
+
     def __init__(self, name, age, race, hp, MaxAttack, country):
         self.name = name
         self.age = age
@@ -99,7 +100,7 @@ class Player(object):
 
     def get_damage(self, damage):
         self.hp -= damage
-        
+
         return f"{self.name} тебе нанесли урон в размере {damage} едениц урона. \nУ тебя осталось {self.hp} хп"
 
     def dead(self):
@@ -177,7 +178,7 @@ player = Player(player_name, player_age, player_race,
 
 ruletka = random.randrange(2)
 first_move = None
-second_move= None
+second_move = None
 if ruletka == 1:
     first_move = 'Enemy'
     second_move = 'Player'
@@ -194,9 +195,26 @@ while True:
 
     print(f"\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возраст - {player.get_stat('age')} \nВаше здоровье - {player.get_stat('hp')}")
 
-    print(f"\n\n\nВаше последнее действие: \n{last_action_player}  \n\nПоследние действие врага : \n{last_action_monster}")
+    print(
+        f"\n\n\nВаше последнее действие: \n{last_action_player}  \n\nПоследние действие врага : \n{last_action_monster}")
 
-    if step == 0 and first_move == 'Enemy':
+    if monster.dead() == True or player.dead() == True:
+        print('Игра окончена')
+
+        if monster.dead() == True and player.dead() == True:
+            print(
+                f"\n\nСегодня никто не ушел живым. \n{monster.get_stat('name')} и {player.get_stat('name')} не вернуться домой")
+            input('Нажмите enter чтобы закончить ')
+        elif monster.dead() == True and player.dead() == False:
+            print(
+                f"Вы вернулись с поля битвы, оставив {monster.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {player.get_stat('name')} неизвестна")
+            input('Нажмите enter чтобы закончить ')
+        elif monster.dead() == False and player.dead() == True:
+            print(
+                f"Вы сегодня не вернетесь домой. Вы проиграли.\n{monster.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {player.get_stat('name')} никто не знает")
+            input('Нажмите enter чтобы закончить ')
+
+    elif step == 0 and first_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp:
             last_action_monster = player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
@@ -206,7 +224,7 @@ while True:
 
     elif step == 0 and first_move == 'Player':
         action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
-        
+
         if action == 1:
             last_action_player = monster.get_damage(player.attack())
         elif action == 2:
@@ -215,7 +233,7 @@ while True:
         step += 1
     elif step == 1 and second_move == 'Player':
         action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
-        
+
         if action == 1:
             last_action_player = monster.get_damage(player.attack())
         elif action == 2:
@@ -227,6 +245,5 @@ while True:
             last_action_monster = player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
             last_action_monster = monster.health()
-        
-        step = 0
 
+        step = 0
