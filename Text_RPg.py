@@ -32,10 +32,11 @@ import random
 
 
 class Enemy(object):
-    def __init__(self, name, age, race, MaxAttack, country):
+    def __init__(self, name, age, race, hp, MaxAttack, country):
         self.name = name
         self.age = age
         self.race = race
+        self.hp = hp
         self.maxAttack = MaxAttack
         self.country = country
 
@@ -74,10 +75,11 @@ class Enemy(object):
 
 
 class Player(object):
-    def __init__(self, name, age, race, MaxAttack, country):
+    def __init__(self, name, age, race, hp, MaxAttack, country):
         self.name = name
         self.age = age
         self.race = race
+        self.hp = hp
         self.maxAttack = MaxAttack
         self.country = country
 
@@ -113,4 +115,10 @@ class Player(object):
             print('Сегодня не ваш день, вам не повезло. Вы пропускаете ход')
 
 
-monster_name = ['Урлук', 'Вельзиву', 'Батон', 'Борщ']
+monster_name = ['Урлук', 'Вельзиву', 'Батон', 'Борщ', 'Багет', 'Монстрищее', 'Взрыватель', 'ок', 'ЕссБОЙ', 'Уничтожитель5000']
+
+monster_age = random.randrange(3000)
+
+monster_race = ['Еда', 'Эльф', 'Гном', 'Человек', 'Робот', 'Киборг', 'Призрак', 'Насекомое', 'Животное', 'Друид', 'Демон', 'Вирус']
+
+monster_hp = random.randrange(1,400)
