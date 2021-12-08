@@ -2,7 +2,9 @@
 # # import asyncio
 import random
 import os
-last_action = 'Пока ничего не произошло'
+last_action_player = 'Пока ничего не произошло'
+
+last_action_monster = 'Пока ничего не произошло'
 # # class BorchMan(object):
 # #     def __init__(self, name = "Undefind", lang = "Undefing", worker = "BOMJ", age = "Undefind", workYears = "no info"):
 # #         self.name = name
@@ -190,15 +192,15 @@ while True:
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f"\nВаш враг - {monster.get_stat('name')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')} \nЗдоровье врага - {monster.get_stat('hp')}")
 
-    print(f"\n\n\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возраст - {player.get_stat('age')} \nВаше здоровье - {player.get_stat('hp')}")
+    print(f"\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возраст - {player.get_stat('age')} \nВаше здоровье - {player.get_stat('hp')}")
 
-    print(f"\n\n\n\n{last_action}")
+    print(f"\n\n\nВаше последнее действие: \n{last_action_player}  \n\nПоследние действие врага : \n{last_action_monster}")
 
     if step == 0 and first_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp:
-            last_action = player.get_damage(monster.attack())
+            last_action_monster = player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
-            last_action = monster.health()
+            last_action_monster = monster.health()
 
         step += 1
 
@@ -206,25 +208,25 @@ while True:
         action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
         
         if action == 1:
-            last_action = monster.get_damage(player.attack())
+            last_action_player = monster.get_damage(player.attack())
         elif action == 2:
-            last_action = player.health()
+            last_action_player = player.health()
 
         step += 1
     elif step == 1 and second_move == 'Player':
         action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
         
         if action == 1:
-            last_action = monster.get_damage(player.attack())
+            last_action_player = monster.get_damage(player.attack())
         elif action == 2:
-            last_action = player.health()
+            last_action_player = player.health()
         step = 0
 
     if step == 1 and second_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp:
-            last_action = player.get_damage(monster.attack())
+            last_action_monster = player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
-            last_action = monster.health()
+            last_action_monster = monster.health()
         
         step = 0
 
