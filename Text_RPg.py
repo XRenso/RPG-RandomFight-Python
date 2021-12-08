@@ -219,7 +219,8 @@ while True:
         elif action == 2:
             player.health()
         step = 0
-    if step == 1 and first_move == 'Enemy':
+
+    if step == 1 and second_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp:
             player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
