@@ -32,7 +32,6 @@ last_action = 'Пока ничего не произошло'
 
 
 class Enemy(object):
-    global last_action
     def __init__(self, name, age, race, hp, MaxAttack, country):
         self.name = name
         self.age = age
@@ -44,7 +43,7 @@ class Enemy(object):
     def get_damage(self, damage):
         self.hp -= damage
         
-        last_action =    f"Вы нанесли урон {self.name} в размере {damage} едениц урона. \nУ {self.name} осталось {self.hp} хп"
+        return   f"Вы нанесли урон {self.name} в размере {damage} едениц урона. \nУ {self.name} осталось {self.hp} хп"
     # def endDIE(self, heroName):
     #     print(f"Вы победили {self.name} из {self.country}. Мои поздравления {heroName}")
 
@@ -59,20 +58,20 @@ class Enemy(object):
         return attack
 
     def health(self):
-        chance = random.randrange(self.maxAttack + self.hp)
+        chance = random.randrange(1,self.maxAttack + self.hp)
         triplet = self.maxAttack + self.hp
         if chance == triplet:
             if self.hp > self.age:
                 regen = random.randrange(self.hp - self.age)
                 self.hp += regen
-                last_action = f"Существо {self.name} срегинирировало {regen} хп"
+                return f"Существо {self.name} срегинирировало {regen} хп"
 
             elif self.age > self.hp:
                 regen = random.randrange(self.age - self.hp)
                 self.hp += regen
-                last_action = f"Существо {self.name} срегинирировало {regen} хп"
+                return f"Существо {self.name} срегинирировало {regen} хп"
         else:
-            last_action = f"{self.name} не удалось срегенирировать хп. Оно пропускает ход"
+            return f"{self.name} не удалось срегенирировать хп. Оно пропускает ход"
 
     def get_stat(self, whatUwant):
         if whatUwant == 'name':
@@ -98,7 +97,7 @@ class Player(object):
     def get_damage(self, damage):
         self.hp -= damage
         
-        last_action = f"{self.name} тебе нанесли урон в размере {damage} едениц урона. \nУ тебя осталось {self.hp} хп"
+        return f"{self.name} тебе нанесли урон в размере {damage} едениц урона. \nУ тебя осталось {self.hp} хп"
 
     def dead(self):
         if self.hp <= 0:
@@ -117,14 +116,14 @@ class Player(object):
             if self.hp > self.age:
                 regen = random.randrange(self.hp - self.age)
                 self.hp += regen
-                last_action = f"Вы, {self.name} ,срегинирировали {regen} хп"
+                return f"Вы, {self.name} ,срегинирировали {regen} хп"
 
             elif self.age > self.hp:
                 regen = random.randrange(self.age - self.hp)
                 self.hp += regen
-                last_action = f"Вы, {self.name} ,срегинирировали {regen} хп"
+                return f"Вы, {self.name} ,срегинирировали {regen} хп"
         else:
-            last_action = 'Сегодня не ваш день, вам не повезло. Вы пропускаете ход'
+            return 'Сегодня не ваш день, вам не повезло. Вы пропускаете ход'
 
     def get_stat(self, whatUwant):
         if whatUwant == 'name':
@@ -188,43 +187,43 @@ step = 0
 
 while True:
     
-    print(f"Ваш враг - {monster.get_stat('name')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')}")
+    print(f"\nВаш враг - {monster.get_stat('name')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')} \nЗдоровье врага - {monster.get_stat('hp')}")
 
-    print(f"\n\n\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возрас - {player.get_stat('age')}")
+    print(f"\n\n\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возрас - {player.get_stat('age')} \nВаше здоровье - {player.get_stat('hp')}")
 
     print(f"\n\n\n\n {last_action}")
 
     if step == 0 and first_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp:
-            player.get_damage(monster.attack())
+            last_action = player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
-            monster.health()
+            last_action = monster.health()
 
         step += 1
 
     elif step == 0 and first_move == 'Player':
-        action = int(input('1)Атака \n2)Вылечиться \nЧто делаем - '))
+        action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
         
         if action == 1:
-            monster.get_damage(player.attack())
+            last_action = monster.get_damage(player.attack())
         elif action == 2:
-            player.health()
+            last_action = player.health()
 
         step += 1
     elif step == 1 and second_move == 'Player':
         action = int(input('1)Атака \n2)Вылечиться \nЧто делаем - '))
         
         if action == 1:
-            monster.get_damage(player.attack())
+            last_action = monster.get_damage(player.attack())
         elif action == 2:
-            player.health()
+            last_action = player.health()
         step = 0
 
     if step == 1 and second_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp:
-            player.get_damage(monster.attack())
+            last_action = player.get_damage(monster.attack())
         elif monster.get_stat('hp') != monster_hp:
-            monster.health()
+            last_action = monster.health()
         
         step = 0
 
