@@ -206,15 +206,15 @@ while True:
         if monster.dead() == True and player.dead() == True:
             print(
                 f"\n\nСегодня никто не ушел живым. \n{monster.get_stat('name')} и {player.get_stat('name')} не вернуться домой")
-            input('Нажмите enter чтобы закончить ')
+            break
         elif monster.dead() == True and player.dead() == False:
             print(
                 f"Вы вернулись с поля битвы, оставив {monster.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {player.get_stat('name')} неизвестна")
-            input('Нажмите enter чтобы закончить ')
+            break
         elif monster.dead() == False and player.dead() == True:
             print(
                 f"Вы сегодня не вернетесь домой. Вы проиграли.\n{monster.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {player.get_stat('name')} никто не знает")
-            input('Нажмите enter чтобы закончить ')
+            break
 
     elif step == 0 and first_move == 'Enemy':
         if monster.get_stat('hp') == monster_hp or enemy_move == 1:
@@ -249,3 +249,8 @@ while True:
             last_action_monster = monster.health()
 
         step = 0
+
+
+
+
+input('\nНажмите enter для завершения игры')
