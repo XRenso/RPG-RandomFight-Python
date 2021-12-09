@@ -1,37 +1,9 @@
-# # from typing import AsyncGenerator, Match
-# # import asyncio
+
 import random
 import os
 last_action_player = 'Пока ничего не произошло'
 
 last_action_monster = 'Пока ничего не произошло'
-# # class BorchMan(object):
-# #     def __init__(self, name = "Undefind", lang = "Undefing", worker = "BOMJ", age = "Undefind", workYears = "no info"):
-# #         self.name = name
-# #         self.lang = lang
-# #         self.worker = worker
-# #         self.age = age
-# #         self.workingYears = workYears
-# #         return None
-
-# #     def getSomething(self, *whatGet):
-# #        what_u_want = {
-# #            1: "Name:" + self.name,
-# #            2: "Lang:" + self.lang,
-#            3: "Work:" + self.worker,
-#            4: self.age,
-#            5: self.workingYears
-#        }
-#        for i in whatGet:
-#         if i in what_u_want:
-#             print( what_u_want[i])
-#         else:
-#             raise ValueError("Невернные данные")
-
-
-# some_worker = BorchMan("John", "RU", "Borch")
-
-# some_worker.getSomething(1,2,3)
 
 
 class Enemy(object):
