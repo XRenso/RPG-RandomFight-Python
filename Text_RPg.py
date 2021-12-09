@@ -190,6 +190,7 @@ elif ruletka == 0:
 step = 0
 
 while True:
+    enemy_move = random.randrange(2)
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f"\nВаш враг - {monster.get_stat('name')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')} \nЗдоровье врага - {monster.get_stat('hp')}")
 
@@ -199,6 +200,7 @@ while True:
         f"\n\n\nВаше последнее действие: \n{last_action_player}  \n\nПоследние действие врага : \n{last_action_monster}")
 
     if monster.dead() == True or player.dead() == True:
+        os.system('cls' if os.name == 'nt' else 'clear')
         print('Игра окончена')
 
         if monster.dead() == True and player.dead() == True:
@@ -215,9 +217,9 @@ while True:
             input('Нажмите enter чтобы закончить ')
 
     elif step == 0 and first_move == 'Enemy':
-        if monster.get_stat('hp') == monster_hp:
+        if monster.get_stat('hp') == monster_hp or enemy_move == 1:
             last_action_monster = player.get_damage(monster.attack())
-        elif monster.get_stat('hp') != monster_hp:
+        elif monster.get_stat('hp') != monster_hp and enemy_move == 0:
             last_action_monster = monster.health()
 
         step += 1
@@ -241,9 +243,9 @@ while True:
         step = 0
 
     if step == 1 and second_move == 'Enemy':
-        if monster.get_stat('hp') == monster_hp:
+        if monster.get_stat('hp') == monster_hp or enemy_move == 1:
             last_action_monster = player.get_damage(monster.attack())
-        elif monster.get_stat('hp') != monster_hp:
+        elif monster.get_stat('hp') != monster_hp and enemy_move == 0:
             last_action_monster = monster.health()
 
         step = 0
