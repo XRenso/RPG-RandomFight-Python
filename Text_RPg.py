@@ -1,4 +1,3 @@
-
 import random
 import os
 last_action_player = 'Пока ничего не произошло'
@@ -12,6 +11,7 @@ class Enemy(object):
         self.age = age
         self.race = race
         self.hp = hp
+        self.maxHP = hp
         self.maxAttack = MaxAttack
         self.country = country
 
@@ -33,16 +33,15 @@ class Enemy(object):
         return attack
 
     def health(self):
-        chance = random.randrange(1, self.maxAttack + self.hp)
-        triplet = self.maxAttack + self.hp
-        if chance == triplet:
+        
+        if self.hp < self.maxHP:
             if self.hp > self.age:
                 regen = random.randrange(self.hp - self.age)
                 self.hp += regen
                 return f"Существо {self.name} срегинирировало {regen} хп"
 
             elif self.age > self.hp:
-                regen = random.randrange(self.age - self.hp)
+                regen = random.randrange(self.age - random.randrange(self.age+1))
                 self.hp += regen
                 return f"Существо {self.name} срегинирировало {regen} хп"
         else:
@@ -57,6 +56,8 @@ class Enemy(object):
             return self.country
         elif whatUwant == 'hp':
             return self.hp
+        elif whatUwant == 'race':
+            return self.race
 
 
 class Player(object):
@@ -67,6 +68,7 @@ class Player(object):
         self.age = age
         self.race = race
         self.hp = hp
+        self.maxHP = hp
         self.maxAttack = MaxAttack
         self.country = country
 
@@ -86,18 +88,17 @@ class Player(object):
         return attack
 
     def health(self):
-        chance = random.randrange(self.maxAttack + self.hp)
-        triplet = self.maxAttack + self.hp
-        if chance == triplet:
+        if self.hp < self.maxHP :
             if self.hp > self.age:
                 regen = random.randrange(self.hp - self.age)
                 self.hp += regen
-                return f"Вы, {self.name} ,срегинирировали {regen} хп"
+                return f"Вы, {self.name}, срегинирировали {regen} хп"
 
             elif self.age > self.hp:
-                regen = random.randrange(self.age - self.hp)
+                
+                regen = random.randrange(self.age - random.randrange(self.age+1))
                 self.hp += regen
-                return f"Вы, {self.name} ,срегинирировали {regen} хп"
+                return f"Вы, {self.name}, срегинирировали {regen} хп"
         else:
             return 'Сегодня не ваш день, вам не повезло. Вы пропускаете ход'
 
@@ -131,7 +132,7 @@ monster_country = ['Евразия', 'Остазия', 'Луна', 'Бумбаз
 random.shuffle(monster_country)
 
 monster = Enemy(random.choice(monster_name), monster_age,
-                monster_race, monster_hp, monster_maxAttack, random.choice(monster_country))
+                random.choice(monster_race), monster_hp, monster_maxAttack, random.choice(monster_country))
 
 
 player_name = input('Как вас зовут странник - ')
@@ -164,7 +165,7 @@ step = 0
 while True:
     enemy_move = random.randrange(2)
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(f"\nВаш враг - {monster.get_stat('name')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')} \nЗдоровье врага - {monster.get_stat('hp')}")
+    print(f"\nВаш враг - {monster.get_stat('name')} \nРасса врага - {monster.get_stat('race')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')} \nЗдоровье врага - {monster.get_stat('hp')}")
 
     print(f"\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возраст - {player.get_stat('age')} \nВаше здоровье - {player.get_stat('hp')}")
 
