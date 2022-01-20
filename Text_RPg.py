@@ -1,5 +1,7 @@
 import random
 import os
+import Enemy_config as en_conf
+
 last_action_player = 'Пока ничего не произошло'
 
 last_action_monster = 'Пока ничего не произошло'
@@ -9,6 +11,7 @@ class Enemy(object):
     def __init__(self, name, age, race, hp, MaxAttack, country):
         self.name = name
         self.age = age
+        self.chance = random.randrange(1, 101)
         self.race = race
         self.hp = hp
         self.maxHP = hp
@@ -19,6 +22,7 @@ class Enemy(object):
         self.hp -= damage
 
         return f"Вы нанесли урон {self.name} в размере {damage} едениц урона. \nУ {self.name} осталось {self.hp} хп"
+
     # def endDIE(self, heroName):
     #     print(f"Вы победили {self.name} из {self.country}. Мои поздравления {heroName}")
 
@@ -29,23 +33,36 @@ class Enemy(object):
             return False
 
     def attack(self):
-        attack = random.randrange(self.maxAttack+1)
+        attack = random.randrange(self.maxAttack + 1)
         return attack
 
     def health(self):
-        
-        if self.hp < self.maxHP:
-            if self.hp > self.age:
-                regen = random.randrange(self.hp - self.age)
-                self.hp += regen
-                return f"Существо {self.name} срегинирировало {regen} хп"
 
-            elif self.age > self.hp:
-                regen = random.randrange(self.age - random.randrange(self.age+1))
-                self.hp += regen
-                return f"Существо {self.name} срегинирировало {regen} хп"
-        else:
-            return f"{self.name} не удалось срегенирировать хп. Оно пропускает ход"
+        if self.hp < self.maxHP:
+            can_u_heal = random.randrange(-5,self.chance + 1)
+            if self.chance != 0:
+               can_u_heal = round(can_u_heal/self.chance)
+            if self.chance == 100:
+                heal = random.randrange(1, self.maxHP - self.hp)
+                self.hp += heal
+                self.chance = 0
+                return  f"Вот как бывает. {self.name} увеличило свое здоровье на {heal}"
+
+            elif self.chance > 0 and self.chance != 100 and can_u_heal >= 0.5:
+                heal = random.randrange(1, self.maxHP - self.hp)
+                self.hp += heal
+                self.chance = 0
+                return f"Вот эта фортуна\nне для тебя..... \n{self.name} повысило хп на {heal}"
+            elif can_u_heal < 0:
+                damage = random.randrange(1, self.maxHP-self.hp)
+                self.hp -= damage
+                self.chance += random.randrange(5,21)
+                return  f"О ДАААА. \n{self.name} поулчило чертов критический промах. \nШприц порвал его вены. \nОНо полуил {damage} урона"
+
+            else:
+                self.chance += random.randrange(1,21)
+                return  'Сегодня не твой день. \nЯ думаю в следущий раз повезет'
+
 
     def get_stat(self, whatUwant):
         if whatUwant == 'name':
@@ -58,12 +75,15 @@ class Enemy(object):
             return self.hp
         elif whatUwant == 'race':
             return self.race
+        elif whatUwant == 'maxHP':
+            return  self.maxHP
 
 
 class Player(object):
-    global last_action
 
     def __init__(self, name, age, race, hp, MaxAttack, country):
+        self.chance = random.randrange(0,101)
+        self.surrender = False
         self.name = name
         self.age = age
         self.race = race
@@ -78,29 +98,43 @@ class Player(object):
         return f"{self.name} тебе нанесли урон в размере {damage} едениц урона. \nУ тебя осталось {self.hp} хп"
 
     def dead(self):
-        if self.hp <= 0:
+        if self.hp <= 0 and not self.surrender:
             return True
-        elif self.hp > 0:
+        elif self.hp > 0 and not self.surrender:
             return False
 
     def attack(self):
-        attack = random.randrange(self.maxAttack+1)
+        attack = random.randrange(self.maxAttack + 1)
         return attack
 
     def health(self):
-        if self.hp < self.maxHP :
-            if self.hp > self.age:
-                regen = random.randrange(self.hp - self.age)
-                self.hp += regen
-                return f"Вы, {self.name}, срегинирировали {regen} хп"
+        if self.hp < self.maxHP:
+            can_u_heal = random.randrange(-5,self.chance + 1)
+            if self.chance != 0:
+               can_u_heal = round(can_u_heal/self.chance)
+            if self.chance == 100:
+                heal =random.randrange(1, self.maxHP - self.hp)
+                self.hp += heal
+                self.chance = 0
+                return  f"Поздравляю. \nВы увеличили свое здоровье на {heal}"
 
-            elif self.age > self.hp:
-                
-                regen = random.randrange(self.age - random.randrange(self.age+1))
-                self.hp += regen
-                return f"Вы, {self.name}, срегинирировали {regen} хп"
-        else:
-            return 'Сегодня не ваш день, вам не повезло. Вы пропускаете ход'
+            elif self.chance > 0 and self.chance != 100 and can_u_heal >= 0.5:
+                heal = random.randrange(1, self.maxHP - self.hp)
+                self.hp += heal
+                self.chance = 0
+                return f"Поздравляю. \nВы увеличили свое здоровье на {heal}"
+            elif can_u_heal < 0:
+                damage = random.randrange(1, self.maxHP-self.hp)
+                self.hp -= damage
+                self.chance += random.randrange(5,21)
+                return  f"О НЕЕЕЕТ. \nТы получил мать его критический промах. \nШприц порвал твою артерию. \nТы полуил {damage} урона"
+
+            else:
+                self.chance += random.randrange(1,21)
+                return  'Сегодня не твой день. \nЯ думаю в следущий раз повезет'
+
+        elif self.hp == self.maxHP:
+            return  'Вы и так здоровы. \nЖаль, но вы пропускаете ход'
 
     def get_stat(self, whatUwant):
         if whatUwant == 'name':
@@ -112,34 +146,25 @@ class Player(object):
         elif whatUwant == 'hp':
             return self.hp
 
+    def shutdown(self):
+        kill = self.maxHP * 10
+        self.surrender = True
+        self.hp -= kill
+        return 'Never gonna give u up'
 
-monster_name = ['Урлук', 'Вельзиву', 'Батон', 'Борщ', 'Багет',
-                'Монстрищее', 'Взрыватель', 'ок', 'ЕссБОЙ', 'Уничтожитель5000']
-random.shuffle(monster_name)
+random.shuffle(en_conf.name)
 
-monster_age = random.randrange(3000)
+random.shuffle(en_conf.race)
 
-monster_race = ['Еда', 'Эльф', 'Гном', 'Человек', 'Робот', 'Киборг',
-                'Призрак', 'Насекомое', 'Животное', 'Друид', 'Демон', 'Вирус']
-random.shuffle(monster_race)
+random.shuffle(en_conf.country)
 
-monster_hp = random.randrange(1, 400)
-
-monster_maxAttack = random.randrange(1, 100)
-
-monster_country = ['Евразия', 'Остазия', 'Луна', 'Бумбаза',
-                   'Угинара', 'Мастараза', 'БАЗА', 'Марс', 'Земля', 'Завод']
-random.shuffle(monster_country)
-
-monster = Enemy(random.choice(monster_name), monster_age,
-                random.choice(monster_race), monster_hp, monster_maxAttack, random.choice(monster_country))
-
+monster = Enemy(random.choice(en_conf.name), en_conf.age,
+                random.choice(en_conf.race), en_conf.hp, en_conf.monster_maxAttack, random.choice(en_conf.country))
 
 player_name = input('Как вас зовут странник - ')
 player_age = int(input('Сколько лет вашему герою - '))
 player_race = input('Какая ваша расса - ')
 player_country = input('Откуда вы - ')
-
 
 player_hp = random.randrange(1, 400)
 
@@ -147,7 +172,6 @@ player_maxAttack = random.randrange(1, 120)
 
 player = Player(player_name, player_age, player_race,
                 player_hp, player_maxAttack, player_country)
-
 
 ruletka = random.randrange(2)
 first_move = None
@@ -159,71 +183,78 @@ elif ruletka == 0:
     first_move = 'Player'
     second_move = 'Enemy'
 
-
 step = 0
 
-while True:
-    enemy_move = random.randrange(2)
-    os.system('cls' if os.name == 'nt' else 'clear')
-    print(f"\nВаш враг - {monster.get_stat('name')} \nРасса врага - {monster.get_stat('race')} \nСтрана врага - {monster.get_stat('country')} \nВозраст врага - {monster.get_stat('age')} \nЗдоровье врага - {monster.get_stat('hp')}")
 
-    print(f"\n\nВы - {player.get_stat('name')} \nВаша страна - {player.get_stat('country')} \nВаш возраст - {player.get_stat('age')} \nВаше здоровье - {player.get_stat('hp')}")
+def start_battle(main_hero, enemy_battle):
+    global  last_action_player, last_action_monster, first_move, second_move, step
+    while True:
 
-    print(
-        f"\n\n\nВаше последнее действие: \n{last_action_player}  \n\nПоследние действие врага : \n{last_action_monster}")
-
-    if monster.dead() == True or player.dead() == True:
+        enemy_move = random.randrange(2)
         os.system('cls' if os.name == 'nt' else 'clear')
-        print('Игра окончена')
+        print(
+            f"\nВаш враг - {enemy_battle.get_stat('name')} \nРасса врага - {enemy_battle.get_stat('race')} \nСтрана врага - {enemy_battle.get_stat('country')} \nВозраст врага - {enemy_battle.get_stat('age')} \nЗдоровье врага - {enemy_battle.get_stat('hp')}")
 
-        if monster.dead() == True and player.dead() == True:
-            print(
-                f"\n\nСегодня никто не ушел живым. \n{monster.get_stat('name')} и {player.get_stat('name')} не вернуться домой")
-            break
-        elif monster.dead() == True and player.dead() == False:
-            print(
-                f"Вы вернулись с поля битвы, оставив {monster.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {player.get_stat('name')} неизвестна")
-            break
-        elif monster.dead() == False and player.dead() == True:
-            print(
-                f"Вы сегодня не вернетесь домой. Вы проиграли.\n{monster.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {player.get_stat('name')} никто не знает")
-            break
+        print(
+            f"\n\nВы - {main_hero.get_stat('name')} \nВаша страна - {main_hero.get_stat('country')} \nВаш возраст - {main_hero.get_stat('age')} \nВаше здоровье - {main_hero.get_stat('hp')}")
 
-    elif step == 0 and first_move == 'Enemy':
-        if monster.get_stat('hp') == monster_hp or enemy_move == 1:
-            last_action_monster = player.get_damage(monster.attack())
-        elif monster.get_stat('hp') != monster_hp and enemy_move == 0:
-            last_action_monster = monster.health()
+        print(
+            f"\n\n\nВаше последнее действие: \n{last_action_player}  \n\nПоследние действие врага : \n{last_action_monster}")
 
-        step += 1
+        if enemy_battle.dead() is True or main_hero.dead():
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print('Игра окончена')
 
-    elif step == 0 and first_move == 'Player':
-        action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
+            if enemy_battle.dead() is True and main_hero.dead():
+                print(
+                    f"\n\nСегодня никто не ушел живым. \n{enemy_battle.get_stat('name')} и {main_hero.get_stat('name')} не вернуться домой")
+                break
+            elif enemy_battle.dead() is True and not main_hero.dead():
+                print(
+                    f"Вы вернулись с поля битвы, оставив {enemy_battle.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {main_hero.get_stat('name')} неизвестна")
+                break
+            elif not enemy_battle.dead() and main_hero.dead() is True:
+                print(
+                    f"Вы сегодня не вернетесь домой. Вы проиграли.\n{enemy_battle.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {main_hero.get_stat('name')} никто не знает")
+                break
 
-        if action == 1:
-            last_action_player = monster.get_damage(player.attack())
-        elif action == 2:
-            last_action_player = player.health()
+        elif step == 0 and first_move == 'Enemy':
+            if enemy_battle.get_stat('hp') == enemy_battle.get_stat('maxHP') or enemy_move == 1:
+                last_action_monster = main_hero.get_damage(enemy_battle.attack())
+            elif enemy_battle.get_stat('hp') != enemy_battle.get_stat('maxHP') and enemy_move == 0:
+                last_action_monster = enemy_battle.health()
 
-        step += 1
-    elif step == 1 and second_move == 'Player':
-        action = int(input('\n1)Атака \n2)Вылечиться \nЧто делаем - '))
+            step += 1
 
-        if action == 1:
-            last_action_player = monster.get_damage(player.attack())
-        elif action == 2:
-            last_action_player = player.health()
-        step = 0
+        elif step == 0 and first_move == 'Player':
+            action = int(input('\n1)Атака \n2)Вылечиться \n3)Сдаться \nЧто делаем - '))
 
-    if step == 1 and second_move == 'Enemy':
-        if monster.get_stat('hp') == monster_hp or enemy_move == 1:
-            last_action_monster = player.get_damage(monster.attack())
-        elif monster.get_stat('hp') != monster_hp and enemy_move == 0:
-            last_action_monster = monster.health()
+            if action == 1:
+                last_action_player = enemy_battle.get_damage(main_hero.attack())
+            elif action == 2:
+                last_action_player = main_hero.health()
+            elif action == 3:
+                main_hero.shutdown()
+            step += 1
+        elif step == 1 and second_move == 'Player':
+            action = int(input('\n1)Атака \n2)Вылечиться \n3)Сдаться \nЧто делаем - '))
 
-        step = 0
+            if action == 1:
+                last_action_player = enemy_battle.get_damage(main_hero.attack())
+            elif action == 2:
+                last_action_player = main_hero.health()
+            elif action == 3:
+                main_hero.shutdown()
+            step = 0
 
+        if step == 1 and second_move == 'Enemy':
+            if enemy_battle.get_stat('hp') == enemy_battle.get_stat('maxHP') or enemy_move == 1:
+                last_action_monster = main_hero.get_damage(enemy_battle.attack())
+            elif enemy_battle.get_stat('hp') != enemy_battle.get_stat('maxHP') and enemy_move == 0:
+                last_action_monster = enemy_battle.health()
 
+            step = 0
 
+start_battle (player, monster)
 
 input('\nНажмите enter для завершения игры')
