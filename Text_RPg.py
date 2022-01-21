@@ -190,6 +190,7 @@ elif ruletka == 0:
     first_move = 'Player'
     second_move = 'Enemy'
 
+
 step = 0
 
 
@@ -218,21 +219,25 @@ def start_battle(main_hero, enemy_battle):
             if enemy_battle.dead() is True and main_hero.dead():
                 print(
                     f"\n\nСегодня никто не ушел живым. \n{enemy_battle.get_stat('name')} и {main_hero.get_stat('name')} не вернуться домой")
-                break
+                return 2
+
             elif enemy_battle.dead() is True and not main_hero.dead():
                 print(
                     f"\n\nВы вернулись с поля битвы, оставив {enemy_battle.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {main_hero.get_stat('name')} неизвестна")
-                break
+                return 1
+
             elif not enemy_battle.dead() and main_hero.dead() is True:
                 print(
                     f"\n\nВы сегодня не вернетесь домой. Вы проиграли.\n{enemy_battle.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {main_hero.get_stat('name')} никто не знает")
-                break
+                return 0
+
 
         elif end == 'Never gonna give u up':
             os.system('cls' if os.name == 'nt' else 'clear')
             print(f"\nВы сдались как вы могли. \nВы поступили подло и дали {enemy_battle.get_stat('name')} возможность прославиться на вашем поражении."
                   f"\nПускай теперь все знают {main_hero.get_stat('name')}, как {main_hero.get_stat('race')} проиграл рассе {enemy_battle.get_stat('race')}")
-            break
+            return 0
+
         elif step == 0 and first_move == 'Enemy':
             if enemy_battle.get_stat('hp') == enemy_battle.get_stat('maxHP') or enemy_move == 1:
                 last_action_monster = main_hero.get_damage(enemy_battle.attack())
@@ -271,6 +276,18 @@ def start_battle(main_hero, enemy_battle):
             step = 0
 
 
-start_battle(player, monster)
+### 0 - игрок умер
+### 1 -враг умер
+### 2 - погибли оба
 
-input('\nНажмите enter для завершения игры')
+status = start_battle(player, monster)
+
+match status:
+    case 1:
+        input('Воу ты победил, нажми любую кнопку для завершения')
+
+    case 2:
+        input('Чтож раз никто так никто. Нажми любую конпку')
+
+    case 0:
+        input('Я разачорован. Нажми любую кнопку')
