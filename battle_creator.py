@@ -26,6 +26,7 @@ first_move = None
 second_move = None
 
 def whoIsFirst():
+    global first_move,second_move
     if ruletka == 1:
         first_move = 'Enemy'
         second_move = 'Player'
@@ -129,10 +130,10 @@ def start_battle(main_hero, enemy_battle):
 #
 # match status:
 #     case 1:
-#         input('Воу ты победил, нажми любую кнопку для завершения')
+#         input('Воу ты победил, Нажми Enter  для завершения')
 #
 #     case 2:
-#         input('Чтож раз никто так никто. Нажми любую конпку')
+#         input('Чтож раз никто так никто. Нажми Enter')
 #
 #     case 0:
-#         input('Я разачорован. Нажми любую кнопку')
+#         input('Я разачорован. Нажми Enter ')

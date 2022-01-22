@@ -64,7 +64,7 @@ class Enemy(object):
                 damage = random.randrange(1, self.maxHP - self.hp)
                 self.hp -= damage
                 self.chance += random.randrange(5, 21)
-                return f"О ДАААА. \n{self.name} поулчило чертов критический промах. \nШприц порвал его вены. \nОНо полуил {damage} урона"
+                return f"О ДАААА. \n{self.name} получило чертов критический промах. \nШприц порвал его вены. \nОно получило {damage} урона"
 
             else:
                 self.chance += random.randrange(1, 21)
