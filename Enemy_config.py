@@ -1,15 +1,24 @@
 import random
-
+import os.path
 name = ['Урлук', 'Вельзиву', 'Батон', 'Борщ', 'Багет',
-                'Монстрищее', 'Взрыватель', 'ок', 'ЕссБОЙ', 'Уничтожитель5000']
+                'Монстрищее', 'Взрыватель', 'ок', 'ЕссБОЙ', 'Уничтожитель5000', 'МастерРикиРала',
+        'ТОЧНО неТВОЯ МАМА', 'Дитар3', 'Пол-Жизни-3', 'Фал Спинсар', 'Джем Ройян',
+        'вТелефоне', 'Интернет8000', 'МегаМэн', 'СуперЧудо', 'Рабочий', 'ПК-крыса',
+        'ЛицоКнига', 'МастерСтыда', 'КиберБаг', 'Котлеты', 'Киборг-МирКоп',
+        'Зибилив', 'Сраманер', 'Агент 0 киллов', 'Типичный Злодей', 'Беженка', 'Адский дрочила']
 
 race = ['Еда', 'Эльф', 'Гном', 'Человек', 'Робот', 'Киборг',
-                'Призрак', 'Насекомое', 'Животное', 'Друид', 'Демон', 'Вирус']
+                'Призрак', 'Насекомое', 'Животное', 'Друид', 'Демон', 'Вирус', 'Код',
+        'Комплектующий', 'СуперГерой', 'Орк', 'Гоблин', 'ЧудоСредство',
+        'Угнетатель', 'Буржуй', 'Пролетарий', 'Мегашевик', 'Быдло',
+        'НоуНейм', 'Чувствительный', 'Тунеядец']
 
 
 
 country = ['Евразия', 'Остазия', 'Луна', 'Бумбаза',
-                   'Угинара', 'Мастараза', 'БАЗА', 'Марс', 'Земля', 'Завод']
+                   'Угинара', 'Мастараза', 'БАЗА', 'Марс', 'Земля', 'Завод', 'ПК',
+           'Пендосия', 'Пельмень', 'Любимый город', 'СтрахЛяндия', 'Аэропорт',
+           'Космос', 'Ад', 'Моды Стим', 'Свободные Народы', 'Скалэнд', 'Реклама туалета']
 
 
 
@@ -84,6 +93,8 @@ class Enemy(object):
                 return self.race
             case 'maxHP':
                 return self.maxHP
+            case 'maxAttack':
+                return  self.maxAttack
 
 
 def create_monster():
@@ -96,8 +107,34 @@ def create_monster():
     monster_maxAttack = random.randrange(1, 100)
 
     random.shuffle(country)
-
+    random.shuffle(name)
+    random.shuffle(race)
     monster = Enemy(random.choice(name), age,
                     random.choice(race), hp, monster_maxAttack, random.choice(country))
 
     return monster
+
+def Save_for_later(Enemy):
+    count = 0
+    path = 'characters/'
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    name = Enemy.get_stat('name')
+    race = Enemy.get_stat('race')
+    age = Enemy.get_stat('age')
+    attack = Enemy.get_stat('maxAttack')
+    hp = Enemy.get_stat('maxHP')
+    country = Enemy.get_stat('country')
+    while os.path.isfile(path + 'm' + str(count) + '.txt'):
+        count+=1
+
+    with open(path + 'm' + str(count) + '.txt' , 'a', encoding='utf-8') as f:
+        f.write(name)
+        f.write('\n' + race)
+        f.write('\n' + str(age))
+        f.write('\n' + country)
+        f.write('\n' + str(attack))
+        f.write('\n' + str(hp))
+        f.write('\n' + str(Enemy))
+

@@ -1,5 +1,5 @@
 import random
-
+import os.path
 
 class Player(object):
 
@@ -68,10 +68,14 @@ class Player(object):
                 return self.country
             case 'hp':
                 return self.hp
+            case 'maxAttack':
+                return self.maxAttack
+            case 'maxHP':
+                return self.maxHP
             case 'race':
-                return  self.race
+                return self.race
             case _:
-                return  'ХАХАХАХАХАХХА БАГ БАГ, НУ ВЫ ВИДЕЛИ. ТУТ БАГ'
+                return 'ХАХАХАХАХАХХА БАГ БАГ, НУ ВЫ ВИДЕЛИ. ТУТ БАГ'
 
 
     def shutdown(self):
@@ -82,7 +86,7 @@ class Player(object):
 
 curr_player = None
 
-def create_player():
+def create_player(returning):
     global curr_player
     player_name = input('Как вас зовут странник - ')
     player_age = int(input('Сколько лет вашему герою - '))
@@ -96,4 +100,33 @@ def create_player():
     curr_player = Player(player_name, player_age, player_race,
                 player_hp, player_maxAttack, player_country)
 
-    return curr_player
+    if returning == 1:
+        return curr_player
+
+
+def Save_for_later(player):
+    count = 0
+    path = 'characters/'
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    name = player.get_stat('name')
+    race = player.get_stat('race')
+    age = player.get_stat('age')
+    attack = player.get_stat('maxAttack')
+    hp = player.get_stat('maxHP')
+    country = player.get_stat('country')
+    while os.path.isfile(path + 'p' + str(count) + '.txt'):
+        count+=1
+
+    with open(path + 'p' + str(count) + '.txt' , 'a', encoding='utf-8') as f:
+        f.write(name)
+        f.write('\n' + race)
+        f.write('\n' + str(age))
+        f.write('\n' + country)
+        f.write('\n' + str(attack))
+        f.write('\n' + str(hp))
+        f.write('\n' + str(player))
+
+
+
