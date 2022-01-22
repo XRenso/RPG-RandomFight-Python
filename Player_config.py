@@ -80,8 +80,10 @@ class Player(object):
         self.hp -= kill
         return 'Never gonna give u up'
 
+curr_player = None
 
 def create_player():
+    global curr_player
     player_name = input('Как вас зовут странник - ')
     player_age = int(input('Сколько лет вашему герою - '))
     player_race = input('Какая ваша расса - ')
@@ -91,7 +93,7 @@ def create_player():
 
     player_maxAttack = random.randrange(1, 120)
 
-    player = Player(player_name, player_age, player_race,
+    curr_player = Player(player_name, player_age, player_race,
                 player_hp, player_maxAttack, player_country)
 
-    return  player
+    return curr_player

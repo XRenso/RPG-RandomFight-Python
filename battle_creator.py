@@ -126,14 +126,14 @@ def start_battle(main_hero, enemy_battle):
 ### 2 - погибли оба
 
 # пример работы
-# status = start_battle(player, monster)
-#
-# match status:
-#     case 1:
-#         input('Воу ты победил, Нажми Enter  для завершения')
-#
-#     case 2:
-#         input('Чтож раз никто так никто. Нажми Enter')
-#
-#     case 0:
-#         input('Я разачорован. Нажми Enter ')
+status = start_battle(player, monster)
+
+match status:
+    case 1:
+        input('Воу ты победил, Нажми Enter  для завершения')
+
+    case 2:
+        input('Чтож раз никто так никто. Нажми Enter')
+
+    case 0:
+        input('Я разачорован. Нажми Enter ')
