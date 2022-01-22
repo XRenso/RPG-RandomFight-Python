@@ -3,7 +3,7 @@ Random generated rpg fights based on python. Terminal game by Borch Entertainmen
 
 # Как оно работает?
 ## 1.Битвы
-Весь код битв находится в файле `battle_creator.py\` 
+Весь код битв находится в файле `battle_creator.py` 
 Работает он на базе генерации чисел и проверок ходов. 
 Также активно работает с классами игрока и врага.
 
