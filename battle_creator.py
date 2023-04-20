@@ -19,7 +19,7 @@ last_action_monster = 'Пока ничего не произошло'
 
 monster = En_conf.create_monster()
 
-player = Pl_conf.create_player()
+player = Pl_conf.create_player(1)
 
 ruletka = random.randrange(2)
 first_move = None
