@@ -2,7 +2,8 @@ import random
 import os
 import Enemy_config as En_conf
 import Player_config as Pl_conf
-
+import openai
+openai.api_key = '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'
 
 
 last_action_player = 'Пока ничего не произошло'
@@ -17,9 +18,7 @@ last_action_monster = 'Пока ничего не произошло'
 
 
 
-monster = En_conf.create_monster()
 
-player = Pl_conf.create_player(1)
 
 ruletka = random.randrange(2)
 first_move = None
@@ -67,20 +66,52 @@ def start_battle(main_hero, enemy_battle):
                 return 2
 
             elif enemy_battle.dead() is True and not main_hero.dead():
-                print(
-                    f"\n\nВы вернулись с поля битвы, оставив {enemy_battle.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {main_hero.get_stat('name')} неизвестна")
+                response = openai.Completion.create(
+                    model="text-davinci-003",
+                    prompt=f'Создай текст, который подводит итоги. Главный герой под именем {main_hero.get_stat("name")} расой {main_hero.get_stat("race")} победил {enemy_battle.get_stat("name")} из расы {enemy_battle.get_stat("race")}. Напиши это торжествующе и в стиле священных писаний церкви',
+                    temperature=0.9,
+                    max_tokens=2048,
+                    frequency_penalty=0.0,
+                    presence_penalty=0.6,
+                )
+                # print(
+                #     f"\n\nВы вернулись с поля битвы, оставив {enemy_battle.get_stat('name')} мертвым на поле сражения. \nДальнейшая судьба {main_hero.get_stat('name')} неизвестна")
+                print(response['choices'][0].get('text'))
+
                 return 1
 
             elif not enemy_battle.dead() and main_hero.dead() is True:
-                print(
-                    f"\n\nВы сегодня не вернетесь домой. Вы проиграли.\n{enemy_battle.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {main_hero.get_stat('name')} никто не знает")
+                response = openai.Completion.create(
+                    model="text-davinci-003",
+                    prompt=f'Создай текст, который подводит итоги. Главный герой под именем {main_hero.get_stat("name")} расой {main_hero.get_stat("race")} умер от рук {enemy_battle.get_stat("name")} расой {enemy_battle.get_stat("race")}. Сделай это в сатрическом стиле и кинофильмов 90-ых',
+                    temperature=0.9,
+                    max_tokens=2048,
+                    top_p=1,
+                    frequency_penalty=0.0,
+                    presence_penalty=0.6,
+
+                )
+                # print(
+                #     f"\n\nВы сегодня не вернетесь домой. Вы проиграли.\n{enemy_battle.get_stat('name')} ушел в неизвестность, дальнейшая его судьба неизвестна. \nЧто будет с {main_hero.get_stat('name')} никто не знает")
+                print(response['choices'][0]['text'])
                 return 0
 
 
         elif end == 'Never gonna give u up':
             os.system('cls' if os.name == 'nt' else 'clear')
-            print(f"\nВы сдались как вы могли. \nВы поступили подло и дали {enemy_battle.get_stat('name')} возможность прославиться на вашем поражении."
-                  f"\nПускай теперь все знают {main_hero.get_stat('name')}, как {main_hero.get_stat('race')} проиграл рассе {enemy_battle.get_stat('race')}")
+            response = openai.Completion.create(
+                model="text-davinci-003",
+                prompt=f'Создай текст, который подводит итоги. Главный герой под именем {main_hero.get_stat("name")} расой {main_hero.get_stat("race")} сдался воину под именем {enemy_battle.get_stat("name")} из расы {enemy_battle.get_stat("race")}. Напиши это осудительно и в стиле священных писаний церкви',
+                temperature=0.9,
+                max_tokens=2048,
+                frequency_penalty=0.0,
+                presence_penalty=0.6,
+            )
+            # print(f"\nВы сдались как вы могли. \nВы поступили подло и дали {enemy_battle.get_stat('name')} возможность прославиться на вашем поражении."
+            #       f"\nПускай теперь все знают {main_hero.get_stat('name')}, как {main_hero.get_stat('race')} проиграл рассе {enemy_battle.get_stat('race')}")
+            # print(response['choices'][0]['text'])
+            print(response['choices'][0].get('text'))
+
             return 0
 
         elif step == 0 and first_move == 'Enemy':
@@ -126,14 +157,19 @@ def start_battle(main_hero, enemy_battle):
 ### 2 - погибли оба
 
 # пример работы
-status = start_battle(player, monster)
+if __name__ == '__main__':
+    monster = En_conf.create_monster()
 
-match status:
-    case 1:
-        input('Воу ты победил, Нажми Enter  для завершения')
+    player = Pl_conf.create_player(1)
+    status = start_battle(player, monster)
 
-    case 2:
-        input('Чтож раз никто так никто. Нажми Enter')
+    match status:
+        case 1:
+            input('Воу ты победил, Нажми Enter  для завершения')
 
-    case 0:
-        input('Я разачорован. Нажми Enter ')
+        case 2:
+            input('Чтож раз никто так никто. Нажми Enter')
+
+        case 0:
+            input('Я разачорован. Нажми Enter ')
+
