@@ -32,9 +32,10 @@ class Map(object):
 
                     cities[i].init_path(path_citis)
 
-Map(20,0)
-for i in cities:
-    paths = []
-    for j in i.paths:
-        paths.append(j.name)
-    print(f'city - {i.name} \npaths - {paths}')
+if __name__ == '__main__':
+    Map(20,0)
+    for i in cities:
+        paths = []
+        for j in i.paths:
+            paths.append(j.name)
+        print(f'city - {i.name} \npaths - {paths}')
