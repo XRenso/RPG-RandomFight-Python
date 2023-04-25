@@ -114,7 +114,7 @@ def create_monster():
 
     return monster
 
-def Save_for_later(Enemy):
+def save_for_later(Enemy):
     count = 0
     path = 'characters/'
     if not os.path.exists(path):
@@ -137,4 +137,16 @@ def Save_for_later(Enemy):
         f.write('\n' + str(attack))
         f.write('\n' + str(hp))
         f.write('\n' + str(Enemy))
+
+def read_enemy_file(enemy):
+    with open(enemy) as f:
+        lines = f.readlines()
+        lines = list(map(lambda each:each.strip('\n'), lines))
+        if len(lines) == 7:
+            try:
+                return Enemy(name=lines[0], age=int(lines[2]), race=lines[1], hp=int(lines[5]), max_attack=int(lines[4]), country=lines[3])
+            except ValueError:
+                return 'Ваш файл монстра повреждён. Не верный тип данных'
+        else:
+            return f'У вас поврежден файл монстра. Нет достающих типов данных'
 

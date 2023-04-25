@@ -86,7 +86,7 @@ class Player(object):
 
 curr_player = None
 
-def create_player(returning):
+def create_player(returning=1):
     global curr_player
     player_name = input('Как вас зовут странник - ')
     player_age = int(input('Сколько лет вашему герою - '))
@@ -104,7 +104,7 @@ def create_player(returning):
         return curr_player
 
 
-def Save_for_later(player):
+def save_for_later(player):
     count = 0
     path = 'characters/'
     if not os.path.exists(path):
@@ -129,4 +129,15 @@ def Save_for_later(player):
         f.write('\n' + str(player))
 
 
-
+def read_player_file(player):
+    with open(player) as f:
+        lines = f.readlines()
+        lines = list(map(lambda each:each.strip('\n'), lines))
+        if len(lines) == 7:
+            try:
+                curr_player = Player(name=lines[0], age=int(lines[2]), race=lines[1], hp=int(lines[5]), max_attack=int(lines[4]), country=lines[3])
+                return curr_player
+            except ValueError:
+                return 'Ваш файл персонажа повреждён. Не верный тип данных'
+        else:
+            return f'У вас поврежден файл персонажа. Нет достающих типов данных'
